@@ -94,6 +94,13 @@ class Refund extends \PostFinanceCheckout\Payment\Controller\Adminhtml\Order
                     } else {
                         $this->messageManager->addSuccessMessage(\__('Successfully refunded.'));
                     }
+                } catch (\PostFinanceCheckout\Sdk\ApiException $e) {
+                    if ($e->getResponseObject() instanceof \PostFinanceCheckout\Sdk\Model\ClientError) {
+                        $this->messageManager->addErrorMessage($e->getResponseObject()->getMessage());
+                    } else {
+                        $this->messageManager->addErrorMessage(
+                            \__('There has been an error while sending the refund to the gateway.'));
+                    }
                 } catch (\Exception $e) {
                     $this->messageManager->addErrorMessage(
                         \__('There has been an error while sending the refund to the gateway.'));
