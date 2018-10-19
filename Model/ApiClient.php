@@ -62,7 +62,7 @@ class ApiClient
      */
     public function getService($type)
     {
-        $type = ltrim($type, '\\');
+        $type = \ltrim($type, '\\');
         if (! isset($this->sharedInstances[$type])) {
             $this->sharedInstances[$type] = new $type($this->getApiClient());
         }
@@ -72,7 +72,7 @@ class ApiClient
     /**
      * Gets the gateway API client.
      *
-     * @throws ApiClientException
+     * @throws \PostFinanceCheckout\Payment\Model\ApiClientException
      * @return \PostFinanceCheckout\Sdk\ApiClient
      */
     public function getApiClient()
@@ -85,7 +85,7 @@ class ApiClient
                 $client->setBasePath($this->getBaseGatewayUrl() . '/api');
                 $this->apiClient = $client;
             } else {
-                throw new ApiClientException('The PostFinance Checkout API user data are incomplete.');
+                throw new \PostFinanceCheckout\Payment\Model\ApiClientException('The PostFinance Checkout API user data are incomplete.');
             }
         }
         return $this->apiClient;
@@ -114,6 +114,6 @@ class ApiClient
      */
     protected function getBaseGatewayUrl()
     {
-        return rtrim($this->_scopeConfig->getValue('postfinancecheckout_payment/general/base_gateway_url'), '/');
+        return \rtrim($this->_scopeConfig->getValue('postfinancecheckout_payment/general/base_gateway_url'), '/');
     }
 }
