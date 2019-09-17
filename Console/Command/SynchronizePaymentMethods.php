@@ -10,10 +10,12 @@
  */
 namespace PostFinanceCheckout\Payment\Console\Command;
 
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State as AppState;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use PostFinanceCheckout\Payment\Api\PaymentMethodConfigurationManagementInterface;
+use PostFinanceCheckout\Payment\Api\PaymentMethodConfigurationManagementInterface\Proxy as PaymentMethodConfigurationManagementInterfaceProxy;
 
 /**
  * Command to synchronize the payment methods.
@@ -23,27 +25,38 @@ class SynchronizePaymentMethods extends Command
 
     /**
      *
-     * @var PaymentMethodConfigurationManagementInterface
+     * @var AppState
+     */
+    private $appState;
+
+    /**
+     *
+     * @var PaymentMethodConfigurationManagementInterfaceProxy
      */
     private $paymentMethodConfigurationManagement;
 
     /**
      *
-     * @param PaymentMethodConfigurationManagementInterface $paymentMethodConfigurationManagement
+     * @param AppState $appState
+     * @param PaymentMethodConfigurationManagementInterfaceProxy $paymentMethodConfigurationManagement
      */
-    public function __construct(PaymentMethodConfigurationManagementInterface $paymentMethodConfigurationManagement)
+    public function __construct(AppState $appState,
+        PaymentMethodConfigurationManagementInterfaceProxy $paymentMethodConfigurationManagement)
     {
         parent::__construct();
+        $this->appState = $appState;
         $this->paymentMethodConfigurationManagement = $paymentMethodConfigurationManagement;
     }
 
     protected function configure()
     {
-        $this->setName('postfinancecheckout:payment-method:synchronize')->setDescription('Synchronizes the PostFinance Checkout payment methods.');
+        $this->setName('postfinancecheckout:payment-method:synchronize')->setDescription(
+            'Synchronizes the PostFinance Checkout payment methods.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         $this->paymentMethodConfigurationManagement->synchronize($output);
     }
 }
