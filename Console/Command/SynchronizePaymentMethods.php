@@ -48,6 +48,9 @@ class SynchronizePaymentMethods extends Command
         $this->paymentMethodConfigurationManagement = $paymentMethodConfigurationManagement;
     }
 
+    /**
+     * @return void
+     */
     protected function configure()
     {
         $this->setName('postfinancecheckout:payment-method:synchronize')->setDescription(
